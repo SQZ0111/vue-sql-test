@@ -37,9 +37,10 @@ Queries are finished like this: `SELECT * FROM <table>;`
 
 - `CREATE DATABASE <name>;`
 - `USE <name>;`
-- `CREATE TABLE <name> (
-  <entry> <datatype> PRIMARY KEY <value/AUTO_INCREMENT/DEFAULT <value>>,
-  <entry> <datatype> NOT NULL <value/AUTO_INCREMENT/DEFAULT <value>>
-);`
-- `RENAME TABLE <old> TO <new>;` (Renaming tables)
-- `SHOW COLUMNS FROM <table>;` (Showing columns, especially after creation)
+
+- ```sql
+  CREATE TABLE <name> (
+    <entry> <datatype> PRIMARY KEY <value/AUTO_INCREMENT/DEFAULT <value>>,
+    <entry> <datatype> NOT NULL <value/AUTO_INCREMENT/DEFAULT <value>>
+  );
+  ```
