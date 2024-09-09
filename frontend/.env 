@@ -1,0 +1,4 @@
+VITE_APP_BACKEND_BASE_URI = "localhost:3003"
+VITE_APP_CREATE_BLOGS_ROUTE = "/blogs/create"
+VITE_APP_GET_BLOGS_ROUTE = "/blogs/get"
+VITE_TEXT = "Test"

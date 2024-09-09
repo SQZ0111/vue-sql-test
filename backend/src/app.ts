@@ -1,6 +1,9 @@
 const express = require("express");
 const cors = require("cors");
+import { timeLog } from "console";
 import { getBlogs, insertBlog, createConnection } from "./utils/connectDb";
+import { Recoverable } from "repl";
+import { validateBlog } from "./utils/validateSanitize";
 
 const app = express();
 const port = 3003;
@@ -22,7 +25,7 @@ app.get("/", (req, res) => {
 });
 
 // Use the connection pool from `req` in your routes
-app.get("/blogs", async (req, res) => {
+app.get("/blogs", express.json(), async (req, res) => {
   try {
     const data = await getBlogs(req.db);
     res.send(data);
@@ -31,18 +34,28 @@ app.get("/blogs", async (req, res) => {
   }
 });
 
-app.post("/blogs/insert", async (req, res) => {
+app.post("/blogs/create", express.json(), async (req, res) => {
   //this is dummy test data
+  // const data = {
+  //   user_id: 1,
+  //   title: "Some another Test",
+  //   content: "Some dumb content without any sense",
+  // };
+  const { user_name, title, content } = req.body as Record<string, string>;
   const data = {
-    user_id: 1,
-    title: "Some another Test",
-    content: "Some dumb content without any sense",
+    user_name: user_name,
+    title: title,
+    content: content,
   };
   try {
+    const validateStatus = validateBlog(data);
+    if (validateStatus != "ok")
+      res.status(400).send({ message: validateStatus });
     await insertBlog(req.db, data);
-    res.send("Blog inserted successfully");
+    res.send({ message: "Blog inserted successfully" });
   } catch (err) {
-    res.status(500).send("Error inserting blog");
+    console.error("Error inserting blog:", err);
+    res.status(500).send({ message: "Error inserting blog" });
   }
 });
 

@@ -32,9 +32,40 @@ export async function getBlogs(
   return rows;
 }
 
-export async function insertBlog(connector: mysql.Pool, data): Promise<void> {
-  //question marks are safety of inserting strings
-  const query = `INSERT INTO blogs(user_id, title, content) VALUES (?, ?, ?)`;
-  //should use execute instead of query
-  await connector.execute(query, [data.user_id, data.title, data.content]);
+export async function insertBlog(
+  connector: mysql.Pool,
+  data: { user_name: string; title: string; content: string }
+): Promise<void> {
+  try {
+    // Check if the user exists
+    const checkUserQuery = `SELECT COUNT(*) as count FROM users WHERE user_name = ?`;
+    const [countResult] = await connector.execute(checkUserQuery, [
+      data.user_name,
+    ]);
+
+    let user_id: number;
+
+    if (countResult[0].count > 0) {
+      const getUserQuery = `SELECT user_id FROM users WHERE user_name = ?`;
+      const [rows] = await connector.execute(getUserQuery, [data.user_name]);
+      user_id = rows[0].user_id;
+    } else {
+      // Insert the user if not exists
+      const insertUserQuery = `INSERT INTO users(user_name) VALUES (?)`;
+      await connector.execute(insertUserQuery, [data.user_name]);
+
+      const getUserQuery = `SELECT user_id FROM users WHERE user_name = ?`;
+      const [rows] = await connector.execute(getUserQuery, [data.user_name]);
+      user_id = rows[0].user_id;
+    }
+
+    if (!user_id) {
+      throw new Error("User ID not found");
+    }
+    const blogQuery = `INSERT INTO blogs(user_id, title, content) VALUES (?, ?, ?)`;
+    await connector.execute(blogQuery, [user_id, data.title, data.content]);
+  } catch (error) {
+    console.error("Error inserting blog:", error);
+    throw error;
+  }
 }

@@ -1,18 +1,54 @@
 <script setup lang="ts">
 import type { Post } from '../../../../custom-ts/basicInterfaces';
-
+import type { BlogData } from '../../../../custom-ts/basicInterfaces';
+import { ref } from 'vue';
+import axios, { type AxiosRequestConfig } from "axios";
 defineProps<({
     posts: Array<Post>
 })>()
+const formRef = ref();
 
+
+async function postBlog (config: AxiosRequestConfig<string>) {
+    try {
+        const response = await axios(config);
+        console.log(response.data.message);
+    } catch (e: any) {
+        console.log(e);
+    }
+}
+
+function handleForm (e: Event): void {
+    e.preventDefault();
+    //import meta not working?
+    // console.log(import.meta.env.VITE_TEXT);
+    const form = formRef.value as HTMLFormElement;
+    const formData = new FormData(form);
+    const data: BlogData = {
+        user_name: formData.get('user') as string,
+        content: formData.get('text') as string,
+        title: formData.get('title') as string
+    }
+    const config: AxiosRequestConfig<string> = {
+        url: ("http://localhost:3003/blogs/create"),
+        method: "POST",
+        headers: {
+            "content-type": "application/json"
+        },
+        data: JSON.stringify(data),
+    }
+    postBlog(config);
+}
 </script>
 
 <template>
-    <form class="form-container">
+    <form ref="formRef" @submit="handleForm" class="form-container">
         <label for="title" />
         <input type="text" placeholder="Enter Title" name="title" required>
         <label for="text" />
         <input type="text" placeholder="Enter Text" name="text" required>
+        <label for="user" />
+        <input type="text" placeholder="Enter Username" name="user" required>
         <div class="button-row">
             <label for="submit" />
             <input type="submit" value="submit" name="submit">

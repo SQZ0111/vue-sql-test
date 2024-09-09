@@ -10,7 +10,7 @@ const components: Record<string, Component> = {
 };
 
 
-const currentComponent = ref("Home");
+const currentComponent = ref("BlogForm");
 let id: Ref<number> = ref(0);
 const posts = reactive<Array<Post>>([
   {
