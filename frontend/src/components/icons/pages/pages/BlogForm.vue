@@ -38,6 +38,7 @@ function handleForm (e: Event): void {
         data: JSON.stringify(data),
     }
     postBlog(config);
+    emit("changeComponent", "Home");
 }
 </script>
 

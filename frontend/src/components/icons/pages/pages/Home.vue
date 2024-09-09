@@ -18,7 +18,7 @@ function handleBlogClicked (elementClicked: Ref<boolean>): void {
 <template>
     <div class="app-container">
         <main>
-            <BlogPost v-for="post in posts" :key="post.id" :title="post.title" :text="post.text"
+            <BlogPost v-for="post in posts" :key="post.blog_id" :title="post.title" :text="post.content"
                       @blog-clicked="handleBlogClicked">
                 <template #button-icon>
                     🗣️

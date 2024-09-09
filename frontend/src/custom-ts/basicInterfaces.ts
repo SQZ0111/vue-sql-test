@@ -1,8 +1,8 @@
 // post type interface
 export interface Post {
   title: string
-  text: string
-  id: number
+  content: string
+  blog_id: number
 }
 
 //not necessary since requests types can be given directly from axios lib
