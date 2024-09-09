@@ -6,10 +6,13 @@ import type { Post } from '../../../../custom-ts/basicInterfaces';
 
 defineProps<({
     posts: Array<Post>,
+    currentComponent: Ref<string>
 })>()
+const emit = defineEmits(['changeComponent']);
 function handleBlogClicked (elementClicked: Ref<boolean>): void {
     elementClicked.value = !elementClicked.value;
 }
+
 </script>
 
 <template>
@@ -23,7 +26,7 @@ function handleBlogClicked (elementClicked: Ref<boolean>): void {
             </BlogPost>
         </main>
         <aside>
-            <button class="button-icon">Add Blog</button>
+            <button @click="emit('changeComponent', 'BlogForm')" class="button-icon">Add Blog</button>
         </aside>
     </div>
 </template>

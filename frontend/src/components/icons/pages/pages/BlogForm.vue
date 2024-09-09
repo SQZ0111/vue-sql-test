@@ -7,7 +7,7 @@ defineProps<({
     posts: Array<Post>
 })>()
 const formRef = ref();
-
+const emit = defineEmits(["changeComponent"]);
 
 async function postBlog (config: AxiosRequestConfig<string>) {
     try {
@@ -53,7 +53,8 @@ function handleForm (e: Event): void {
             <label for="submit" />
             <input type="submit" value="submit" name="submit">
             <label for="cancel" />
-            <button name="cancel">Cancel</button>
+            <button name="cancel" @click="emit('changeComponent',
+                'Home')">Cancel</button>
         </div>
     </form>
 

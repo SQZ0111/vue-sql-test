@@ -9,8 +9,10 @@ const components: Record<string, Component> = {
   BlogForm,
 };
 
-
-const currentComponent = ref("BlogForm");
+const currentComponent = ref("Home");
+function changeComponent (newComponent: string): void {
+  currentComponent.value = newComponent;
+}
 let id: Ref<number> = ref(0);
 const posts = reactive<Array<Post>>([
   {
@@ -34,5 +36,7 @@ const posts = reactive<Array<Post>>([
 </script>
 
 <template>
-  <component :is="components[currentComponent]" :posts="posts"></component>
+  <component :is="components[currentComponent]" :currentComponent="currentComponent" :posts="posts"
+             @changeComponent="changeComponent">
+  </component>
 </template>
